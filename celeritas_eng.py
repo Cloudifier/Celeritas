@@ -23,22 +23,24 @@ import tensorflow as tf
 
 
 __author__     = "Andrei Ionut DAMIAN"
-__copyright__  = "Copyright 2017, HTSS"
-__credits__    = ["Alex Purdila","Ionut Canavea","Ionut Muraru"]
+__copyright__  = "Copyright 2017, Cloudifier"
+__credits__    = ["Alex Purdila","Cristina Aciubotaritei"]
 __version__    = "0.1.1"
 __maintainer__ = "Andrei Ionut DAMIAN"
-__email__      = "ionut.damian@htss.ro"
+__email__      = "damian@cloudifier.net"
 __status__     = "R&D"
-__library__    = "HYPERLOOP CELERITAS ENGINE"
+__library__    = "CLOUDIFIER CELERITAS ENGINE"
 __created__    = "2017-04-11"
-__modified__   = "2017-04-12"
+__modified__   = "2017-05-17"
 __lib__        = "CELERS"
 
 
 
 class CeleritasEngine:
     """ 
-    Hyperloop Celeritas Recommendations Engine with tf/GPU backend
+    
+    Cloudifier Celeritas Recommendations Engine with tf/GPU backend
+    
     """
     def __init__(self):
         self.FULL_DEBUG = True

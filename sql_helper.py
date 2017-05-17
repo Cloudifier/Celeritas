@@ -14,12 +14,12 @@ import time as tm
 import os
 
 __author__     = "Andrei Ionut DAMIAN"
-__copyright__  = "Copyright 2007"
+__copyright__  = "Partial Copyright 2007 Cloudifier"
 __credits__    = ["Alexandru Purdila"]
 __license__    = "GPL"
 __version__    = "1.2.5"
 __maintainer__ = "Andrei Ionut DAMIAN"
-__email__      = "ionut.damian@htss.ro"
+__email__      = "damian@cloudifier.net
 __status__     = "Production"
 __library__    = "MSSQL HELPER"
 __created__    = "2017-01-25"
