@@ -1,0 +1,25 @@
+{
+
+	"_USER_LIST" : "SELECT DISTINCT MicroSegmentId from [temp_ML].[dbo]._RFMM16_sgmidXItemXAttrib1",
+	"_USER_TRANSACTIONS" : "SELECT * FROM [temp_ML].[dbo]._RFMM16_sgmidXItemXAttrib1 WHERE [MicroSegmentId]=",
+	"_PRODUCT_FEATURE_MATRIX" : "SELECT * FROM [temp_ML].[dbo].[_ProductFeatures2016]",
+
+	"USER_LIST" : "SELECT DISTINCT MicroSegmentId from [temp_ML].[dbo]._RFMM14_sgmidXItemXAttrib1",
+	"USER_TRANSACTIONS" : "SELECT * FROM [temp_ML].[dbo]._RFMM14_sgmidXItemXAttrib1 WHERE [MicroSegmentId]=",
+	"PRODUCT_FEATURE_MATRIX" : "SELECT * FROM [temp_ML].[dbo].[_ProductFeatures2014]",
+
+
+	"COMPUTED_BEHAVIOR_MATRIX_SQL" : "SELECT * FROM [temp_ML].[dbo].[MATRIX_NO_NA_Round]",
+
+
+
+
+	"CUSTOMER_ID_FIELD" : "MicroSegmentId",
+	"PRODUCT_ID_FIELD" : "ItemId",
+	"PRODUCT_NAME_FIELD" : "ItemName",
+
+	"TARGET_FIELD" : "Count",
+
+	"DROPFIELDS": ["ID","IDD","Count","Obs"]
+
+}

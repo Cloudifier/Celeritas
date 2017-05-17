@@ -1,0 +1,4 @@
+[CELERS][2017-05-08 13:26:49] [SQLHLP] INIT [MSSQL HELPER v1.2.5]
+[CELERS][2017-05-08 13:26:49] [SQLHLP] Using data folder:...\_hyperloop_data\celeritas\db_cache
+[CELERS][2017-05-08 13:26:51] [SQLHLP] ODBC Conn: DRIVER={ODBC Driver 13 for SQL Serv...
+[CELERS][2017-05-08 13:26:52] [SQLHLP] Connection created on VSQL08\HYPERLOOP

@@ -1,0 +1,5 @@
+[CELERS][2017-05-15 17:40:01] [SQLHLP] INIT [MSSQL HELPER v1.2.5]
+[CELERS][2017-05-15 17:40:01] [SQLHLP] Using data folder:...\_hyperloop_data\celeritas\db_cache
+[CELERS][2017-05-15 17:40:01] [SQLHLP] ODBC Conn: DRIVER={ODBC Driver 13 for SQL Serv...
+[CELERS][2017-05-15 17:40:05] [SQLHLP] FAILED ODBC Conn!
+[CELERS][2017-05-15 17:40:05] [SQLHLP] ERROR: ('08001', '[08001] [Microsoft][ODBC Driver 13 for 

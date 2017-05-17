@@ -1,0 +1,9 @@
+{
+	"server" : "VSQL08\\HYPERLOOP",
+	"_database" : "StatisticalStore",
+	"database" : "temp_ML",
+	"username" : "andreidi",
+	"password" : "HML2017!!",
+	"driver" : "{ODBC Driver 13 for SQL Server}",
+	"datafolder" : "c:\\_hyperloop_data\\celeritas"
+}
