@@ -5,5 +5,5 @@
 	"username" : "andreidi",
 	"password" : "HML2017!!",
 	"driver" : "{ODBC Driver 13 for SQL Server}",
-	"datafolder" : "c:\\_hyperloop_data\\celeritas"
+	"datafolder" : "d:\\GoogleDrive\\_hyperloop_data\\celeritas"
 }
