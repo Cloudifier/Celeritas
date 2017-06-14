@@ -43,76 +43,82 @@ class CeleritasEngine:
   
   """
   def __init__(self):
-      self.FULL_DEBUG = True
-      self.DEBUG_SHOW_PLT = False
-      
-      pd.options.display.float_format = '{:,.3f}'.format
-      pd.set_option('expand_frame_repr', False)
-      np.set_printoptions(precision = 3, suppress = True, edgeitems = 5)
+    # debug config
+    self.FULL_DEBUG = True
+    self.DEBUG_SHOW_PLT = False      
+    self.VERBOSE_LEVEL = 1
+    # end debug config
+    
+    pd.options.display.float_format = '{:,.3f}'.format
+    pd.set_option('expand_frame_repr', False)
+    np.set_printoptions(precision = 3, 
+                        suppress = True, 
+                        edgeitems = 5,
+                        linewidth = 100)
 
 
-      self.MODULE = "{} v{}".format(__library__,__version__)
-      self.s_prefix = dt.strftime(dt.now(),'%Y%m%d')
-      self.s_prefix+= "_"
-      self.s_prefix+=dt.strftime(dt.now(),'%H%M')
-      self.s_prefix+= "_"
-      self.cwd = os.getcwd()
-      self.save_folder = os.path.join(self.cwd,"temp")
-      self.log_file = os.path.join(self.save_folder,        
-                                   self.s_prefix + __lib__+"_log.txt")
-      nowtime = dt.now()
-      strnowtime = nowtime.strftime("[{}][%Y-%m-%d %H:%M:%S] ".format(__lib__))
-      print(strnowtime+"Init log: {}".format(self.log_file))
-      
-      if not os.path.exists(self.save_folder):
-          print(strnowtime+"CREATED TEMP LOG FOLDER: {}".format(self.save_folder))
-          os.makedirs(self.save_folder)
-      else:
-          print(strnowtime+"TEMP LOG FOLDER: {}".format(self.save_folder))
-      self.sql_eng = MSSQLHelper(parent_log = self)
-      self.setup_folder()
-      self._logger("Work folder: [{}]".format(self.save_folder))
+    self.MODULE = "{} v{}".format(__library__,__version__)
+    self.s_prefix = dt.strftime(dt.now(),'%Y%m%d')
+    self.s_prefix+= "_"
+    self.s_prefix+=dt.strftime(dt.now(),'%H%M')
+    self.s_prefix+= "_"
+    self.cwd = os.getcwd()
+    self.save_folder = os.path.join(self.cwd,"temp")
+    self.log_file = os.path.join(self.save_folder,        
+                                 self.s_prefix + __lib__+"_log.txt")
+    nowtime = dt.now()
+    strnowtime = nowtime.strftime("[{}][%Y-%m-%d %H:%M:%S] ".format(__lib__))
+    print(strnowtime+"Init log: {}".format(self.log_file))
+    
+    if not os.path.exists(self.save_folder):
+        print(strnowtime+"CREATED TEMP LOG FOLDER: {}".format(self.save_folder))
+        os.makedirs(self.save_folder)
+    else:
+        print(strnowtime+"TEMP LOG FOLDER: {}".format(self.save_folder))
+    self.sql_eng = MSSQLHelper(parent_log = self)
+    self.setup_folder()
+    self._logger("Work folder: [{}]".format(self.save_folder))
 
 
-      self._logger("INIT "+self.MODULE)
+    self._logger("INIT "+self.MODULE)
 
-      if self.FULL_DEBUG:
-          self._logger(self.s_prefix)
-          self._logger("__name__: {}".format(__name__))
-          self._logger("__file__: {}".format(__file__))
-      
-      self.PredictorList = list()
-      
-      self.TESTING = True
-      
-      self.GPU_PRESENT = self.has_gpu()
-      
-      if self.GPU_PRESENT:
-          self.USE_TF = True
-      
-      self.CUST_FIELD = "MicroSegmendId"
-      self.PROD_ID_FIELD = "ItemId"
-      self.PROD_NAME_FIELD = "ItemName"
-      self.TARGET_FIELD = "Count"
-      
-      self._load_config()
-      
-      
-      # default hyperparameters
-      self.USE_MOM_SGD = True # if False use Adam Optimizer in TF
-      self.ALPHA = 0.0001
-      self.LAMBDA = 0.001
-      self.EPOCHS = 100
-              
-      self.USE_NP_MOMENTUM = True
-      self.mom_speed = 0.9
-      self.momentum = 0
-      
-      self.UserData = {}
-      
-      self._df_prod = None
-      
-      return
+    if self.FULL_DEBUG:
+        self._logger(self.s_prefix)
+        self._logger("__name__: {}".format(__name__))
+        self._logger("__file__: {}".format(__file__))
+    
+    self.PredictorList = list()
+    
+    self.TESTING = True
+    
+    self.GPU_PRESENT = self.has_gpu()
+    
+    if self.GPU_PRESENT:
+        self.USE_TF = True
+    
+    self.CUST_FIELD = "MicroSegmendId"
+    self.PROD_ID_FIELD = "ItemId"
+    self.PROD_NAME_FIELD = "ItemName"
+    self.TARGET_FIELD = "Count"
+    
+    self._load_config()
+    
+    
+    # default hyperparameters
+    self.USE_MOM_SGD = True # if False use Adam Optimizer in TF
+    self.ALPHA = 0.0001
+    self.LAMBDA = 0.001
+    self.EPOCHS = 250
+            
+    self.USE_NP_MOMENTUM = True
+    self.mom_speed = 0.9
+    self.momentum = 0
+    
+    self.UserData = {}
+    
+    self._df_prod = None
+    
+    return
   
   def setup_folder(self):
       self.s_prefix = dt.strftime(dt.now(),'%Y%m%d')
@@ -416,7 +422,10 @@ class CeleritasEngine:
         nptime = self._stop_timer()
         self._logger("NPneq time: {:.2f}s".format(nptime))
         if self.FULL_DEBUG:
-          self._logger("yhat[:10]: {}".format(np_X.dot(np_theta).reshape(-1)))
+          if self.VERBOSE_LEVEL>2:
+            self._logger("Data {}:\n{}".format(np_X.shape,np_X))
+          if self.VERBOSE_LEVEL>1:  
+            self._logger("npneq yhat: {}".format(np_X.dot(np_theta).reshape(-1)))
         np_total_loss = self.MSE(np_theta,
                                  df_user_trans=df_usrtrans,
                                  predictor_list=predictor_list,
@@ -500,7 +509,7 @@ class CeleritasEngine:
     self._logger(" EPOCHS:{} ALPHA:{} LAMBDA:{} BATCHSIZE:{}".format(
             epochs, ALPHA, LAMBDA, batch_size))
 
-    if self.FULL_DEBUG:
+    if False and self.FULL_DEBUG:
       self._logger("Data sample:\nX=\n{}\nY=\n{}".format(
           np_usr_trans[:6,:10],
           np_usr_targets[:6,:]))
@@ -576,7 +585,7 @@ class CeleritasEngine:
           
       self._start_timer()
       # create object level list of optimization loss
-      self.tflosslist = list()
+      self.tflosslist = list() # batch loss
       self.nplosslist = list()
       self.epoch_loss_list_tf = []
       self.epoch_loss_list_np = []
@@ -603,10 +612,13 @@ class CeleritasEngine:
                            }
               
               
-              opt_res, loss_res, batch_train_pred = session.run(
-                                          [tf_opt_oper, tf_loss, tf_yhat],
-                                          feed_dict=train_dict)
+              #opt_res, loss_res, batch_train_pred = session.run(
+              #                            [tf_opt_oper, tf_loss, tf_yhat],
+              #                            feed_dict=train_dict)
+              opt_res = session.run([tf_opt_oper],
+                                    feed_dict=train_dict)
               if self.FULL_DEBUG and (curr_step % display_step)==0:
+                loss_res = tf_loss.eval(feed_dict=train_dict)
                 self._logger("TF Step {}/{}: batch loss={:.2f}".format(
                         curr_step, all_steps, loss_res))
                 np_b = tf_bias.eval()
@@ -630,7 +642,6 @@ class CeleritasEngine:
                     tf_mse,
                     t2-t1))
               # done step
-              self.tflosslist.append(loss_res)
           #done epoch
           if self.FULL_DEBUG:
             tf_mse = tf_MSE.eval(feed_dict = {
@@ -659,9 +670,9 @@ class CeleritasEngine:
                                             user_id,
                                             f_time,
                                             tf_total_loss))
-        if self.FULL_DEBUG:
+        if self.FULL_DEBUG and self.VERBOSE_LEVEL>1:
           yhat1 = X_train.dot(np_tf_vector)
-          print("TF yhat: {}".format(yhat1.reshape(-1)))
+          self._logger("TF yhat: {}".format(yhat1.reshape(-1)))
         df_vector.loc[dfindex,1:] = np_tf_vector
         df_vector.iloc[dfindex,0]  = str(user_id)+' TFsgd'
         dfindex += 1
@@ -743,11 +754,11 @@ class CeleritasEngine:
           
         df_vector.loc[1,1:] = np_vector
         df_vector.iloc[1,0]  = str(user_id)+' NPsgd'   
-        if self.FULL_DEBUG:
+        if self.FULL_DEBUG and self.VERBOSE_LEVEL>1:
           yhat2 = X_train.dot(np_vector)
-          print("np yhat:{}".format(yhat2.reshape(-1)))
+          self._logger("np yhat:{}".format(yhat2.reshape(-1)))
     
-    if self.TESTING:
+    if self.TESTING and self.VERBOSE_LEVEL>1:
       self._logger("SGD:\n{}".format(df_vector.iloc[:,:11]))
                     
     # now return updated vector
@@ -765,29 +776,34 @@ class CeleritasEngine:
     mse = np.mean((np_yhat - np_y)**2)
     return mse
   
+
   def CalculateUserVector(self, user_id, df_usrtrans):
       """
       Calculate user behavior vector based on executed tranzactions
       """
       if len(self.PredictorList)==0:
           self._setup_predictors(df_usrtrans)
-
-      df_v1 = self._train_user_vector(
-                         user_id
-                         ,df_usrtrans
-                         ,self.PredictorList
-                         ,self.TARGET_FIELD
-                         #,np_vector = None 
-                         ,batch_size = 128
-                         ,epochs = self.EPOCHS
-                         )
+      df = pd.DataFrame()
+      if True:  
+        df_v1 = self._train_user_vector(
+                           user_id
+                           ,df_usrtrans
+                           ,self.PredictorList
+                           ,self.TARGET_FIELD
+                           #,np_vector = None 
+                           ,batch_size = 128
+                           ,epochs = self.EPOCHS
+                           )
+        df = pd.concat([df,df_v1])
       
-      df_v2 = self._train_user_vector_neq(user_id
-                         ,df_usrtrans
-                         ,self.PredictorList
-                         ,self.TARGET_FIELD)
+      if True:
+        df_v2 = self._train_user_vector_neq(user_id
+                           ,df_usrtrans
+                           ,self.PredictorList
+                           ,self.TARGET_FIELD)
+        df = pd.concat([df,df_v2])
       
-      return pd.concat([df_v1,df_v2])
+      return df
   
   def CalculateUsersBehaviorMatrix(self):
       """ 
@@ -860,10 +876,22 @@ class CeleritasEngine:
     if target_field is None:
       target_field = self.TARGET_FIELD
       
-    np_vectors = np.array(df_vectors[predictor_list])
+    if predictor_list[0] != "BIAS":
+      v_predictor_list = ["BIAS"] + predictor_list
+    else:
+      v_predictor_list = predictor_list
+      
+    #
+    # predictor_list DOES NOT contain the bias term !
+    #
+      
+    np_vectors = np.array(df_vectors[v_predictor_list])
     np_products = np.array(df_products[predictor_list])
-    if np_products.shape[0]<np_vectors.shape[0]:
+    if np_products.shape[1]<np_vectors.shape[1]:
       np_products = np.c_[np.ones(np_products.shape[0]), np_products]
+    
+    if False and self.FULL_DEBUG:
+      self._logger("CalcScores Data {}:\n{}".format(np_products.shape,np_products))
     
     np_scores = np_products.dot(np_vectors.T)
     np_result = np_scores
@@ -902,12 +930,12 @@ if __name__ == "__main__":
     print("\n\n Results:\n{}".format(df.iloc[:,:11]))
     
     df_prods = eng.UserData[test_users[0]]
-    print("\nProducts:\n{}".format(df_prods.iloc[:6,:11]))
+    print("\nProducts:\n{}".format(df_prods.iloc[:6,:8]))
     
     df_res = eng.CalculateScores(df_vectors = df,
                                  df_products = df_prods)
     
-    print("\nScores:\n{}{}\n".format(df_res.head(5),df_res.tail(5)))
+    print("\nScores:\n{}\n{}\n".format(df_res.head(5),df_res.tail(5)))
     cols = list(df_res.columns)
     nr_cols = len(cols)
     
