@@ -3,7 +3,7 @@
 	"_database" : "StatisticalStore",
 	"database" : "temp_ML",
 	"username" : "andreidi",
-	"password" : "HML2017!!",
+	"password" : "AIDB2017!!",
 	"driver" : "{ODBC Driver 13 for SQL Server}",
 	"datafolder" : "d:\\GoogleDrive\\_hyperloop_data\\celeritas"
 }
